@@ -1,0 +1,22 @@
+{% load extra_tags %}
+
+<div class="{{ div_class }}" id="{{ div_id }}">
+    {% if new_models %}
+        <div class="slider-fouc">
+            <div class="products-slider owl-carousel" data-item="4">
+                {% for model in new_models %}
+                    {% small_item model %}
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Product Not Found -->
+        <div class="product-not-found">
+            <div class="not-found">
+                <h2>SORRY!</h2>
+                <h6>There is not any product in specific catalogue.</h6>
+            </div>
+        </div>
+        <!-- Product Not Found /- -->
+    {% endif %}
+</div>

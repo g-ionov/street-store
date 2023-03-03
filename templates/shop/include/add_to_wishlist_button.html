@@ -1,0 +1,17 @@
+{#{% if in_wishlist %}#}
+{#<form name="remove_from_wishlist"#}
+{#      action="{% url 'add_or_remove_from_wishlist' model.pk %}"#}
+{#      class="post-form" method="post">#}
+{#    {% csrf_token %}#}
+{#    <button class="button button-outline-secondary far fa-heart u-s-m-l-6 red"></button>#}
+{#</form>#}
+{#{% else %}#}
+<form name="add_to_wishlist"
+      action="{% url 'add_or_remove_from_wishlist' model.pk %}"
+      class="post-form" method="post">
+    {% csrf_token %}
+    <button class="button button-outline-secondary far fa-heart u-s-m-l-6"></button>
+</form>
+{#{% endif %}#}
+
+{# Невозможно реалиховать изменение отрисовки цвета кнопки без props drilling`а #}

@@ -1,0 +1,95 @@
+{% load static %}
+<!-- Header -->
+<header>
+    <!-- Top-Header -->
+    <div class="full-layer-outer-header">
+        <div class="container clearfix">
+            <nav>
+                <ul class="primary-nav g-nav">
+                    <li>
+                        <a href="tel:+795366666666">
+                            <i class="fas fa-phone u-c-brand u-s-m-r-9"></i>
+                            Telephone:+7-953-666-66-66</a
+                        >
+                    </li>
+                    <li>
+                        <a href="mailto:contact@domain.com">
+                            <i class="fas fa-envelope u-c-brand u-s-m-r-9"></i>
+                            E-mail: ionov@lakriz.ru
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul class="secondary-nav g-nav">
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a
+                            >Здравствуйте, {{ user.username }}
+                                <i class="fas fa-chevron-down u-s-m-l-9"></i>
+                            </a>
+                            <ul class="g-dropdown" style="width: 200px">
+                                <li>
+                                    <a href="cart.html">
+                                        <i class="fas fa-cog u-s-m-r-9"></i>
+                                        Корзина</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="wishlist.html">
+                                        <i class="far fa-heart u-s-m-r-9"></i>
+                                        Список желаемого</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="checkout.html">
+                                        <i class="far fa-check-circle u-s-m-r-9"></i>
+                                        Оформить заказ</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="{% url 'logout' %}">
+                                        <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
+                                        Выйти</a
+                                    >
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <a href="{% url 'login' %}"
+                        >Войти/Зарегистрироваться
+
+                        </a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- Top-Header /- -->
+    <!-- Mid-Header -->
+    <div class="full-layer-mid-header">
+        <div class="container">
+            <div class="row clearfix align-items-center">
+                <div class="col-lg-3 col-md-9 col-sm-6">
+                    <div class="brand-logo text-lg-center">
+                        <a href="{% url 'index' %}">
+                            <img
+                                    src="{% static 'images/main-logo/street-store.png' %}"
+                                    alt="Street Store Logo"
+                                    class="app-brand-logo"
+                            />
+                        </a>
+                    </div>
+                </div>
+                {% block search_and_cart %}
+
+                {% endblock search_and_cart %}
+            </div>
+        </div>
+    </div>
+    <!-- Mid-Header /- -->
+    {% block bottom_header %}
+
+    {% endblock bottom_header %}
+</header>
+<!-- Header /- -->

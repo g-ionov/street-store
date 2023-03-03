@@ -1,0 +1,127 @@
+{% load extra_tags %}
+
+<div class="product-item col-lg-4 col-md-6 col-sm-6">
+    <div class="item">
+        <div class="image-container">
+            <a class="item-img-wrapper-link" href="{{ model.get_absolute_url }}">
+                <img class="img-fluid" src="{% main_model_image model %}" alt="{{ model.name }}">
+            </a>
+            <div class="item-action-behaviors">
+                <a class="item-addwishlist" href="javascript:void(0)">Добавить в список желаемого</a>
+                <a class="item-addCart" href="javascript:void(0)">Добавить в корзину</a>
+            </div>
+        </div>
+        <div class="item-content">
+            <div class="what-product-is">
+                <ul class="bread-crumb">
+                    <li class="has-separator">
+                        <a href="shop-v1-root-category.html">Men's</a>
+                    </li>
+                    <li class="has-separator">
+                        <a href="shop-v2-sub-category.html">Tops</a>
+                    </li>
+                    <li>
+                        <a href="shop-v3-sub-sub-category.html">Hoodies</a>
+                    </li>
+                </ul>
+                <h6 class="item-title">
+                    <a href="single-product.html">Casual Hoodie Full Cotton</a>
+                </h6>
+                <div class="item-description">
+                    <p>This hoodie is full cotton. It includes a muff sewn onto the lower
+                        front,
+                        and (usually) a drawstring to adjust the hood opening. Throughout
+                        the
+                        U.S., it is common for middle-school, high-school, and college
+                        students
+                        to wear this sweatshirts—with or without hoods—that display their
+                        respective school names or mascots across the chest, either as part
+                        of a
+                        uniform or personal preference.
+                    </p>
+                </div>
+                <div class="item-stars">
+                    <div class='star' title="4.5 out of 5 - based on 23 Reviews">
+                        <span style='width:67px'></span>
+                    </div>
+                    <span>(23)</span>
+                </div>
+            </div>
+            <div class="price-template">
+                <div class="item-new-price">
+                    $55.00
+                </div>
+                <div class="item-old-price">
+                    $60.00
+                </div>
+            </div>
+        </div>
+        <div class="tag new">
+            <span>NEW</span>
+        </div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="image-container">
+        <a
+                class="item-img-wrapper-link"
+                href="{{ model.get_absolute_url }}"
+        >
+            <img
+                    class="img-fluid"
+                    src="{% main_model_image model %}"
+                    alt="{{ model.name }}"
+            />
+        </a>
+        <div class="item-action-behaviors">
+            {% add_to_wishlist_button model %}
+        </div>
+    </div>
+    <div class="item-content">
+        <div class="what-product-is">
+            <ul class="bread-crumb">
+                <li class="has-separator">
+                    <a href="shop-v1-root-category.html">Men's</a>
+                </li>
+                <li class="has-separator">
+                    <a href="shop-v2-sub-category.html">Tops</a>
+                </li>
+                <li>
+                    <a href="shop-v3-sub-sub-category.html"
+                    >Hoodies</a
+                    >
+                </li>
+            </ul>
+            <h6 class="item-title">
+                <a href="{{ model.get_absolute_url }}"
+                >{{ model.name }}</a
+                >
+            </h6>
+            <div class="rating">
+                <span>{% average_rating model %}</span>
+                <span>({% reviews_quantity model %})</span>
+            </div>
+        </div>
+        <div class="price-template">
+            {% if model.sale != 0 %}
+                <div class="item-new-price">
+                    <h4>{{ model.get_current_price }} руб.</h4>
+                </div>
+                <div class="item-old-price">
+                    <span>{{ model.price }} руб.</span>
+                </div>
+                <div class="sale-interest">
+                    <span>{{ model.get_discount_percentage }}% </span>
+                </div>
+                <div class="tag sale">
+                    <span>SALE</span>
+                </div>
+            {% else %}
+                <div class="item-new-price">
+                    <h4>{{ model.price }} руб.</h4>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

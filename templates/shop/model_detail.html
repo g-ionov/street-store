@@ -1,0 +1,295 @@
+{% extends 'shop/base.html' %}
+{% load extra_tags %}
+{% block title %} {{ model.name }} {% endblock title %}
+{% block content %}
+    <!-- Single-Product-Full-Width-Page -->
+    <div class="page-detail u-s-p-t-80">
+        <div class="container">
+            <!-- Product-Detail -->
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <!-- Product-zoom-area -->
+                    <div class="slider-main owl-carousel">
+                        {% for image in model.modelimages_set.all %}
+                            <div class="image-container">
+                                <img src="{{ image.image.url }}" alt=""/>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Product-zoom-area /- -->
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <!-- Product-details -->
+                    <div class="all-information-wrapper">
+                        <div class="section-1-title-breadcrumb-rating">
+                            <div class="product-title">
+                                <h1>
+                                    <a href="single-product.html">{{ model.name }}</a>
+                                </h1>
+                            </div>
+                            <ul class="bread-crumb">
+                                <li class="has-separator">
+                                    <a href="home.html">Home</a>
+                                </li>
+                                <li class="has-separator">
+                                    <a href="shop-v1-root-category.html">Men's Clothing</a>
+                                </li>
+                                <li class="has-separator">
+                                    <a href="shop-v2-sub-category.html">Tops</a>
+                                </li>
+                                <li class="is-marked">
+                                    <a href="shop-v3-sub-sub-category.html">Hoodies</a>
+                                </li>
+                            </ul>
+                            <div class="product-rating">
+                                <span>Рейтинг товара: </span>
+                                <span class="rating">{% average_rating model %}</span>
+                                <span>(основан на {% reviews_quantity model %} отызвах)</span>
+                            </div>
+                        </div>
+                        <div class="section-2-short-description u-s-p-y-14">
+                            <h6 class="information-heading u-s-m-b-8">Описание:</h6>
+                            <p>{{ model.description }}</p>
+                        </div>
+                        <div class="section-3-price-original-discount u-s-p-y-14">
+                            {% if model.sale != 0 %}
+                                <div class="price">
+                                    <h4>{{ model.get_current_price }} руб.</h4>
+                                </div>
+                                <div class="original-price">
+                                    <span>Старая цена:</span>
+                                    <span>{{ model.price }} руб.</span>
+                                </div>
+                                <div class="discount-price">
+                                    <span>Скидка:</span>
+                                    <span>{{ model.get_discount_percentage }}%</span>
+                                </div>
+                                <div class="total-save">
+                                    <span>Выгода:</span>
+                                    <span>{{ model.sale }} руб.</span>
+                                </div>
+                            {% else %}
+                                <div class="price">
+                                    <h4>{{ model.price }} руб.</h4>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="section-4-sku-information u-s-p-y-14">
+                            <h6 class="information-heading u-s-m-b-8">Информация о товаре:</h6>
+                            <div class="availability">
+                                <span>Доступность:</span>
+                                {% if model.available %}
+                                    <span class="available">В наличии</span>
+                                    <div class="left">
+                                        <span>На складе:</span>
+                                        <span>{% total_model_quantity model %}</span>
+                                    </div>
+                                    <div class="section-5-product-variants u-s-p-y-14">
+                                        <form name="add_to_cart" action="{% url 'add_or_remove_from_cart' model.pk %}"
+                                              class="post-form" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="add"/>
+                                            <h6 class="information-heading u-s-m-b-8">Размер:</h6>
+                                            <div class="sizes u-s-m-b-11">
+                                                <div class="size-variant select-box-wrapper">
+                                                    <label>
+                                                        <select class="select-box product-size" name="size">
+                                                            {% model_sizes model as sizes %}
+                                                            {% for size in sizes %}
+                                                                <option value="{{ size.0.pk }}">{{ size.0.us }}
+                                                                    - {{ size.1 }} шт
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="quantity-wrapper u-s-m-b-22">
+                                                <span>Количество:</span>
+                                                <div class="quantity">
+                                                    <input type="number" name="quantity" class="quantity-text-field"
+                                                           value="1"/>
+                                                    <a class="plus-a" data-max="1000">&#43;</a>
+                                                    <a class="minus-a" data-min="1">&#45;</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <button class="button button-outline-secondary" type="submit">
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <span class="not-available">Товар закончился</span>
+                                {% endif %}
+                                {% add_to_wishlist_button model %}
+                            </div>
+                        </div>
+                        <div class="section-6-social-media-quantity-actions u-s-p-y-14"></div>
+                    </div>
+                    <!-- Product-details /- -->
+                </div>
+            </div>
+            <!-- Product-Detail /- -->
+            <!-- Detail-Tabs -->
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="detail-tabs-wrapper u-s-p-t-80">
+                        <div class="detail-nav-wrapper u-s-m-b-30">
+                            <ul class="nav single-product-nav justify-content-center">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#description"
+                                    >Описание</a
+                                    >
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#review">Отзывы</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <!-- Description-Tab -->
+                            <div class="tab-pane fade active show" id="description">
+                                <div class="description-whole-container">
+                                    <p class="desc-p u-s-m-b-26">{{ model.description }}</p>
+                                </div>
+                            </div>
+                            <!-- Description-Tab /- -->
+                            <!-- Reviews-Tab -->
+                            <div class="tab-pane fade" id="review">
+                                <div class="review-whole-container">
+                                    <div class="row r-1 u-s-m-b-26 u-s-p-b-22">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="total-score-wrapper">
+                                                <h6 class="review-h6">Рейтинг товара</h6>
+                                                <div class="circle-wrapper">
+                                                    <h1>{% average_rating model %}</h1>
+                                                </div>
+                                                <h6 class="review-h6">Основан на {% reviews_quantity model %}
+                                                    отзывах</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row r-2 u-s-m-b-26 u-s-p-b-22">
+                                        <div class="col-lg-12">
+                                            <div class="your-rating-wrapper">
+                                                {% if user.is_authenticated %}
+                                                    <h6 class="review-h6">Нам очень важен Ваш отзыв.</h6>
+                                                    <h6 class="review-h6">
+                                                        Вы уже использовали этот продукт? Оставьте Ваше мнение
+                                                    </h6>
+                                                    <form name="review" action="{% url 'add_review' %}"
+                                                          method="post"
+                                                          class="post-form">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="model" value="{{ model.pk }}">
+                                                        <div class="star-wrapper u-s-m-b-8">
+                                                            <div class="star">
+                                                                <span id="your-stars" style="width: 0"></span>
+                                                            </div>
+                                                            <label for="your-rating-value"></label>
+                                                            <select id="your-rating-value" name="grade">
+                                                                <option value="{{ review_form.grade }}"></option>
+                                                            </select>
+                                                            <label for="your-order">Номер заказа</label>
+                                                            {% orders_of_model user model as orders %}
+                                                            <select id="your-order" name="order">
+                                                                {% for order in orders %}
+                                                                    <option value="{{ order.pk }}">{{ order }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <label for="review-text-area"
+                                                        >Отзыв
+                                                            <span class="astk"> *</span>
+                                                        </label>
+                                                        <textarea
+                                                                class="text-area u-s-m-b-8"
+                                                                id="review-text-area"
+                                                                placeholder="Review"
+                                                                name="text"
+                                                        ></textarea>
+                                                        <button class="button button-outline-secondary">
+                                                            Оставить отзыв
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <h6 class="review-h6">
+                                                        Вы уже использовали этот продукт? Войдите на сайт и оставьте
+                                                        Ваше
+                                                        мнение!
+                                                    </h6>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Get-Reviews -->
+                                    <div class="get-reviews u-s-p-b-22">
+                                        <!-- Review-Options -->
+                                        <div class="review-options u-s-m-b-16">
+                                            <div class="review-option-heading">
+                                                <h6>
+                                                    Отзывы
+                                                    <span> {{ reviews_quantity }} </span>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <!-- Review-Options /- -->
+                                        <!-- All-Reviews -->
+                                        <div class="reviewers">
+                                            {% for review in model.review_set.all %}
+                                                <div class="review-data">
+                                                    <div class="reviewer-name-and-date">
+                                                        <h6 class="reviewer-name">{{ review.user.first_name }}</h6>
+                                                        <h6 class="review-posted-date">{{ review.created_at }}</h6>
+                                                        <h6 class="review-posted-date">Заказ
+                                                            от: {{ review.order.created_at }}</h6>
+                                                    </div>
+                                                    <div class="reviewer-stars-title-body">
+                                                        <div class="reviewer-stars">
+                                                            <span id="review-grade">{{ review.grade }}</span>
+                                                        </div>
+                                                        <p class="review-body">{{ review.text }}</p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- All-Reviews /- -->
+                                    </div>
+                                    <!-- Get-Reviews /- -->
+                                </div>
+                            </div>
+                            <!-- Reviews-Tab /- -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Detail-Tabs /- -->
+            <!-- Different-Product-Section -->
+            <div class="detail-different-product-section u-s-p-t-80">
+                <!-- Similar-Products -->
+                {% get_similar_products model 4 as similar_products %}
+                {% if similar_products %}
+                    <section class="section-maker">
+                        <div class="container">
+                            <div class="sec-maker-header text-center">
+                                <h3 class="sec-maker-h3">Вам также может понравится</h3>
+                            </div>
+                            <div class="slider-fouc">
+                                <div class="products-slider owl-carousel" data-item="4">
+                                    {% for model in similar_products %}
+                                        {% small_item model %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+                <!-- Similar-Products /- -->
+            </div>
+            <!-- Different-Product-Section /- -->
+        </div>
+    </div>
+    <!-- Single-Product-Full-Width-Page /- -->
+{% endblock content %}

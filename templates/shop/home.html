@@ -1,0 +1,51 @@
+{% extends 'shop/base.html' %}
+{% load extra_tags %}
+{% block title %} Street Store {% endblock title %}
+{% block content %}
+    <!-- app -->
+    <div id="app">
+        <!-- Main-Slider -->
+        <div class="default-height ph-item">
+            <div class="slider-main owl-carousel">
+                <div class="bg-image one">
+                    <div class="slide-content slide-animation">
+                        <h1>Лучший ассортимент</h1>
+                        <h2>Кроссовки / Одежда </h2>
+                    </div>
+                </div>
+                <div class="bg-image two">
+                </div>
+                <div class="bg-image three">
+                </div>
+            </div>
+        </div>
+        <!-- Main-Slider /- -->
+        <!-- Men-Clothing -->
+        {% category_block 'ДЛЯ МУЖЧИН' 'men' man_new_models man_best_selling_products %}
+        <!-- Men-Clothing /- -->
+        <!-- Women-Clothing -->
+        {% category_block 'ДЛЯ ЖЕНЩИН' 'women' women_new_models women_best_selling_products %}
+        <!-- Women-Clothing /- -->
+        <!-- Brand-Slider -->
+        <div class="brand-slider u-s-p-b-80">
+            <div class="container">
+                <div class="brand-slider-content owl-carousel" data-item="5">
+                    {% for brand in brands %}
+                        <div class="brand-pic">
+                            <a href="#">
+                                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}"/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="redirect-link-wrapper text-center u-s-p-t-25 u-s-p-b-80">
+                    <a class="redirect-link" href="store-directory.html">
+                        <span>Все бренды</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Brand-Slider /- -->
+    </div>
+    <!-- app /- -->
+{% endblock content %}

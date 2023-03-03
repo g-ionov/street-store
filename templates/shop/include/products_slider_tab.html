@@ -1,0 +1,22 @@
+{% load extra_tags %}
+
+<div class="{{ div_class }}" id="{{ div_id }}">
+    {% if models %}
+        <div class="slider-fouc">
+            <div class="products-slider owl-carousel" data-item="4">
+                {% for model in models %}
+                    {% small_item model %}
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Product Not Found -->
+        <div class="product-not-found">
+            <div class="not-found">
+                <h2>Пусто</h2>
+                <h6>Товары не найдены</h6>
+            </div>
+        </div>
+        <!-- Product Not Found /- -->
+    {% endif %}
+</div>

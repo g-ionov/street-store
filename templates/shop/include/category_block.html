@@ -1,0 +1,44 @@
+{% load extra_tags %}
+
+<section class="section-maker">
+    <div class="container">
+        <div class="sec-maker-header text-center">
+            <h3 class="sec-maker-h3">{{ category_name }}</h3>
+            <ul class="nav tab-nav-style-1-a justify-content-center">
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            data-toggle="tab"
+                            href="#{{ category_name_in_href }}-latest-products"
+                    >Новинки</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link"
+                            data-toggle="tab"
+                            href="#{{ category_name_in_href }}-best-selling-products"
+                    >Самые продаваемые</a
+                    >
+                </li>
+            </ul>
+        </div>
+        <div class="wrapper-content">
+            <div class="outer-area-tab">
+                <div class="tab-content">
+                    <div class="tab-pane active show fade" id="men-latest-products">
+                        {% products_list_line new_models %}
+                    </div>
+                    <div class="tab-pane fade" id="men-best-selling-products">
+                        {% products_list_line best_selling_products %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="redirect-link-wrapper text-center u-s-p-t-25 u-s-p-b-80">
+            <a class="redirect-link" href="store-directory.html">
+                <span>Больше товаров</span>
+            </a>
+        </div>
+    </div>
+</section>

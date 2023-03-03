@@ -1,0 +1,34 @@
+{% load extra_tags %}
+
+<div class="mini-cart-wrapper">
+    <div class="mini-cart">
+        <div class="mini-cart-header">
+            КОРЗИНА
+            <button
+                    type="button"
+                    class="button ion ion-md-close"
+                    id="mini-cart-close"
+            ></button>
+        </div>
+        <ul class="mini-cart-list">
+            {% for item in cart_item %}
+                <li class="clearfix">
+                    <a href="{{ item.model.get_absolute_url }}">
+                        <img src="{% main_model_image item.model %}" alt="Product"/>
+                        <span class="mini-item-name">{{ item.model.name }}</span>
+                        <span class="mini-item-price">{{ item.model.price }} р</span>
+                        <span class="mini-item-quantity"> {{ item.quantity }} </span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="mini-shop-total clearfix">
+            <span class="mini-total-heading float-left">Итоговая сумма:</span>
+            <span class="mini-total-price float-right">{{ total_price }} р</span>
+        </div>
+        <div class="mini-action-anchors">
+            <a href="{% url 'cart' %}" class="cart-anchor">Просмотр корзины</a>
+            <a href="checkout.html" class="checkout-anchor">Купить</a>
+        </div>
+    </div>
+</div>
