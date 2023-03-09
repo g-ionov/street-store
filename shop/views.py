@@ -5,11 +5,11 @@ from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
-from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm
-from .models import Model, Review
+from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm
+from .models import Model, Review, User
 from .services import add_to_wishlist, remove_from_wishlist, is_model_in_wishlist, get_new_models, \
     get_best_selling_products, get_brands, get_model, get_model_sizes_quantity_in_stock, \
-    create_or_update_review, remove_from_cart, add_to_cart
+    create_or_update_review, remove_from_cart, add_to_cart, delete_user, edit_user
 
 
 class ModelDetailView(DetailView):
@@ -31,6 +31,30 @@ class AddReview(View):
         create_or_update_review(request.user, request.POST['model'], request.POST['order'],
                                 request.POST['grade'], request.POST['text'])
         messages.success(request, 'Ваш отзыв успешно добавлен')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class UserView(View):
+    """ Личный кабинет пользователя """
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('action') == 'edit':
+            return render(request, 'shop/edit_user.html', {})
+        return render(request, 'shop/user.html', {}) if request.user.is_authenticated else redirect('login')
+
+    def post(self, request, *args, **kwargs):
+        if request.POST['action'] == 'delete':
+            delete_user(request.user)
+            messages.success(request, 'Ваш аккаунт успешно удален')
+            return redirect('index')
+        elif request.POST['action'] == 'edit':
+            form = UserEditForm(request.POST)
+            print(form.errors)
+            if form.is_valid():
+                edit_user(request.user, form.cleaned_data),
+                return redirect('me')
+            else:
+                return render(request, 'shop/edit_user.html', {'form_errors': form.errors})
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -58,7 +82,7 @@ class RegisterUserView(View):
         return render(request, "registration/register.html", context={"register_form": form})
 
     def get(self, request, *args, **kwargs):
-        form = CustomUserCreationForm(request.GET)
+        form = CustomUserCreationForm()
         return render(request, "registration/register.html", context={"register_form": form})
 
 
@@ -73,8 +97,6 @@ class CartView(View):
             return redirect('login')
         if request.POST['action'] == 'add':
             form = AddToCartForm(request.POST)
-            print(form.is_valid())
-            print(form.cleaned_data)
             if form.is_valid():
                 if not form.cleaned_data['quantity']:
                     form.quantity = 1

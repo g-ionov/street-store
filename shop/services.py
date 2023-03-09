@@ -166,11 +166,6 @@ def remove_from_cart(user, model):
     models.Cart.objects.filter(user=user, model=model).delete()
 
 
-def remove_from_cart(user, model):
-    """ Удаление товара из корзины """
-    models.Cart.objects.filter(user=user, model=model).delete()
-
-
 def get_models_by_category(category: int = None, gender: str = None):
     """ Получение товаров по категории """
     if category and gender:
@@ -186,3 +181,13 @@ def get_models_by_category(category: int = None, gender: str = None):
 def get_model_sizes_quantity_in_stock(model, size):
     """ Получение количества моделей конкретного размера на складе """
     return models.Stock.objects.filter(model=model, size=size).aggregate(Sum('quantity')).get('quantity__sum')
+
+
+def delete_user(user):
+    """ Удаление пользователя """
+    models.User.objects.filter(pk=user.pk).delete()
+
+
+def edit_user(user, data):
+    """ Редактирование пользователя """
+    models.User.objects.filter(pk=user.pk).update(**data)

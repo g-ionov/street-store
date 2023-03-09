@@ -1,0 +1,56 @@
+{% extends 'shop/base.html' %}
+{% load extra_tags %}
+{% block title %} {{ user.username }} {% endblock title %}
+{% block content %}
+    <!-- Single-Product-Full-Width-Page -->
+    <div class="page-detail u-s-p-t-80">
+        <div class="container">
+            <!-- User-Edit -->
+            <div class="row profile-row">
+                <div class="col-md-12">
+                    <h1>Ваш профиль </h1>
+                    <hr>
+                    <form method="post" action="{% url 'me' %}" class="d-flex flex-column">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="edit">
+                        <div>
+                            {{ form_errors.username }}
+                            <label class="label-text col-md-3">Username:</label>
+                            <input type="text" name="username" class="col-md-3" value="{{ user.username }}">
+                        </div>
+                        <div>
+                            {{ form_errors.first_name }}
+                            <label class="col-md-3">Имя:</label>
+                            <input type="text" name="first_name" class="col-md-3" value="{{ user.first_name }}">
+                        </div>
+                        <div>
+                            {{ form_errors.last_name }}
+                            <label class="col-md-3">Фамилия:</label>
+                            <input type="text" name="last_name" class="col-md-3" value="{{ user.last_name }}">
+
+                        </div>
+                        <div>
+                            {{ form_errors.email }}
+                            <label class="col-md-3">E-mail:</label>
+                            <input type="text" name="email" class="col-md-3" value="{{ user.email }}">
+                        </div>
+                        <div>
+                            {{ form_errors.phone }}
+                            <label class="col-md-3">Телефон:</label>
+                            <input type="text" name="phone" class="col-md-3" value="{{ user.phone }}">
+                        </div>
+                        <div>
+                            {{ form_errors.birth_date }}
+                            <label class="col-md-3">Дата рождения:</label>
+                            <input type="text" name="birth_date" class="col-md-3" value="{{ user.birth_date }}">
+                        </div>
+                        <hr>
+                        <div>
+                            <button class="btn btn-primary form-btn" type="submit">Изменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

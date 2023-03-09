@@ -1,10 +1,11 @@
 from django.urls import path
 
 from .views import ModelDetailView, AddReview, MainView, \
-    RegisterUserView, CartView, WishlistView
+    RegisterUserView, CartView, WishlistView, UserView
 
 urlpatterns = [
     path('', MainView.as_view(), name='index'),
+    path('me/', UserView.as_view(), name='me'),
     path("wishlist/", WishlistView.as_view(), name="wishlist"),
     path("wishlist/<int:pk>", WishlistView.as_view(), name="add_or_remove_from_wishlist"),
     path("cart/", CartView.as_view(), name="cart"),

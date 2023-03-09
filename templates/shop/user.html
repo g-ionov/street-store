@@ -1,0 +1,60 @@
+{% extends 'shop/base.html' %}
+{% load extra_tags %}
+{% block title %} {{ user.username }} {% endblock title %}
+{% block content %}
+    <!-- Single-Product-Full-Width-Page -->
+    <div class="page-detail u-s-p-t-80">
+        <div class="container">
+            <!-- User-Detail -->
+            <div class="row profile-row">
+                <div class="col-md-12">
+                    <h1>Ваш профиль </h1>
+                    <hr>
+                    <h2>{{ user.username }}</h2>
+                    <div class="row">
+                        <p class="col-md-3">Имя:</p>
+                        <p class="col-md-9">{{ user.first_name }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-3">Фамилия:</p>
+                        <p class="col-md-9">{{ user.last_name }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-3">E-mail:</p>
+                        <p class="col-md-9">{{ user.email }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-3">Телефон:</p>
+                        <p class="col-md-9">{{ user.phone }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-3">Дата рождения:</p>
+                        <p class="col-md-9">{{ user.birth_date }}</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-3">Дата регистрации:</p>
+                        <p class="col-md-9">{{ user.date_joined }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="d-flex justify-content-md-between">
+                            <form class="col-md-4" action="{% url 'me' %}" method="get">
+                                <input type="hidden" name="action" value="edit">
+                                <button class="btn btn-primary form-btn" type="submit">Редактировать</button>
+                            </form>
+                            <form class="col-md-4" action="{% url 'me' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <button class="btn btn-danger form-btn" type="submit">Удалить</button>
+                            </form>
+                            <form class="col-md-4" action="{% url 'password_change' %}" method="get">
+                                <button class="btn btn-primary form-btn" type="submit">Изменить пароль</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
