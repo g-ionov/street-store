@@ -6,10 +6,15 @@ from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
 from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm
-from .models import Model, Review, User
-from .services import add_to_wishlist, remove_from_wishlist, is_model_in_wishlist, get_new_models, \
-    get_best_selling_products, get_brands, get_model, get_model_sizes_quantity_in_stock, \
-    create_or_update_review, remove_from_cart, add_to_cart, delete_user, edit_user, delete_review
+from .models import Model, Review
+from .services.brand_services import get_brands
+from .services.cart_services import add_to_cart, remove_from_cart
+from .services.model_services import get_new_models, get_model
+from .services.order_services import get_best_selling_models
+from .services.review_services import create_or_update_review, delete_review
+from .services.stock_services import get_model_sizes_quantity_in_stock
+from .services.user_services import delete_user, edit_user
+from .services.wishlist_services import is_model_in_wishlist, remove_from_wishlist, add_to_wishlist
 
 
 class ModelDetailView(DetailView):
@@ -69,8 +74,8 @@ class MainView(View):
         return render(request, 'shop/home.html',
                       {'man_new_models': get_new_models('M'),
                        'women_new_models': get_new_models('F'),
-                       'man_best_selling_products': get_best_selling_products('M'),
-                       'women_best_selling_products': get_best_selling_products('F'),
+                       'man_best_selling_models': get_best_selling_models('M'),
+                       'women_best_selling_models': get_best_selling_models('F'),
                        'brands': get_brands()})
 
 
