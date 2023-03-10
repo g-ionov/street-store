@@ -9,7 +9,7 @@ from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditFo
 from .models import Model, Review, User
 from .services import add_to_wishlist, remove_from_wishlist, is_model_in_wishlist, get_new_models, \
     get_best_selling_products, get_brands, get_model, get_model_sizes_quantity_in_stock, \
-    create_or_update_review, remove_from_cart, add_to_cart, delete_user, edit_user
+    create_or_update_review, remove_from_cart, add_to_cart, delete_user, edit_user, delete_review
 
 
 class ModelDetailView(DetailView):
@@ -27,10 +27,14 @@ class ModelDetailView(DetailView):
 class AddReview(View):
     """ Добавить новый отзыв """
 
-    def post(self, request):
-        create_or_update_review(request.user, request.POST['model'], request.POST['order'],
-                                request.POST['grade'], request.POST['text'])
-        messages.success(request, 'Ваш отзыв успешно добавлен')
+    def post(self, request, *args, **kwargs):
+        if kwargs['action'] == 'add':
+            create_or_update_review(request.user, request.POST['model'], request.POST['order'],
+                                    request.POST['grade'], request.POST['text'])
+            messages.success(request, 'Ваш отзыв успешно добавлен')
+        elif kwargs['action'] == 'delete':
+            delete_review(request.POST['review'])
+            messages.success(request, 'Ваш отзыв успешно удален')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

@@ -179,7 +179,7 @@
                                                     <h6 class="review-h6">
                                                         Вы уже использовали этот продукт? Оставьте Ваше мнение
                                                     </h6>
-                                                    <form name="review" action="{% url 'add_review' %}"
+                                                    <form name="review" action="{% url 'review' 'add' %}"
                                                           method="post"
                                                           class="post-form">
                                                         {% csrf_token %}
@@ -252,6 +252,16 @@
                                                         </div>
                                                         <p class="review-body">{{ review.text }}</p>
                                                     </div>
+                                                    {% if review.user == user %}
+                                                        <form action="{% url 'review' 'delete' %}" method="post"
+                                                              class="post-form">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="review" value="{{ review.pk }}">
+                                                            <button class="button button-outline-secondary">
+                                                                Удалить отзыв
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
                                                 </div>
                                             {% endfor %}
                                         </div>

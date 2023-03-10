@@ -188,6 +188,11 @@ def delete_user(user):
     models.User.objects.filter(pk=user.pk).delete()
 
 
+def delete_review(review_id):
+    """ Удаление отзыва """
+    models.Review.objects.filter(pk=review_id).delete()
+
+
 def edit_user(user, data):
     """ Редактирование пользователя """
     models.User.objects.filter(pk=user.pk).update(**data)
