@@ -8,7 +8,7 @@ from base.services import get_random_code, get_grades, get_image_path_upload, ge
     get_random_item_number
 from mptt.models import MPTTModel, TreeForeignKey
 
-import shop.services as services
+from shop import services
 
 GENDERS = [('M', 'Male'), ('F', 'Female')]
 
@@ -63,7 +63,8 @@ class Order(models.Model):
     is_user_recipient = models.BooleanField(verbose_name='Пользователь - получатель', default=True)
     created_at = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
-    recipient = models.ManyToManyField(Recipient, verbose_name='Получатель', blank=True)
+    recipient = models.ForeignKey(Recipient, verbose_name='Получатель', blank=True, on_delete=models.SET_NULL,
+                                  null=True)
     paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     def __str__(self):
@@ -184,7 +185,7 @@ class Stock(models.Model):
 
     def save(self, *args, **kwargs):
         super(Stock, self).save(*args, **kwargs)
-        services.update_availability(self.model)
+        services.model_services.update_availability(self.model)
 
     class Meta:
         verbose_name = 'Склад'
@@ -198,7 +199,7 @@ class ModelOrder(models.Model):
     size = models.ForeignKey(Size, models.CASCADE, verbose_name='Размер')
 
     def __str__(self):
-        return f'{self.order}: {self.model} - {self.quantity}'
+        return f'{self.order}: {self.model} ({self.size}) - {self.quantity}'
 
     def save(self, *args, **kwargs):
         """ Убирает товар со склада после оформления заказа """

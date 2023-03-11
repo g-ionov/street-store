@@ -19,3 +19,13 @@ def get_best_selling_models(gender: str = None):
         else models.ModelOrder.objects.filter(model__gender=gender).values('model').annotate(Count('model')). \
         order_by('-model__count')
     return [models.Model.objects.get(pk=obj.get('model')) for obj in query]
+
+
+def get_user_orders(user):
+    """ Получение заказов пользователя """
+    return models.Order.objects.filter(user=user).order_by('-created_at')
+
+
+def get_models_in_order(order):
+    """ Получение товаров в заказе """
+    return models.ModelOrder.objects.filter(order=order)

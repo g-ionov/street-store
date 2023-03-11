@@ -26,7 +26,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address', 'is_user_recipient', 'paid', 'created_at', 'updated_at')
+    list_display = ('id', 'user', 'address', 'is_user_recipient', 'paid', 'created_at', 'updated_at')
     search_fields = list_display_links = ('user', 'address')
     list_filter = ('paid', 'is_user_recipient')
 

@@ -42,7 +42,8 @@
                         <div>
                             {{ form_errors.birth_date }}
                             <label class="col-md-3">Дата рождения:</label>
-                            <input type="text" name="birth_date" class="col-md-3" value="{{ user.birth_date }}">
+                            <input type="text" name="birth_date" class="col-md-3"
+                                   value="{{ user.birth_date|date:'d.m.Y' }}">
                         </div>
                         <hr>
                         <div>

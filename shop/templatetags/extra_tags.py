@@ -3,7 +3,7 @@ from django import template
 from shop.services.cart_services import get_models_in_cart, get_total_price_in_cart, get_total_quantity_in_cart
 from shop.services.category_services import get_categories
 from shop.services.model_services import get_model_image, get_total_model_quantity, get_similar_models
-from shop.services.order_services import get_orders_of_model
+from shop.services.order_services import get_orders_of_model, get_models_in_order
 from shop.services.review_services import get_total_reviews_quantity, get_average_rating
 from shop.services.stock_services import get_sizes_of_model
 from shop.services.wishlist_services import get_products_in_wishlist, is_model_in_wishlist
@@ -68,3 +68,4 @@ register.simple_tag(func=get_total_quantity_in_cart, name="total_quantity_in_car
 register.simple_tag(func=get_products_in_wishlist, name="models_in_wishlist")
 register.simple_tag(func=get_models_in_cart, name="models_in_cart")
 register.simple_tag(func=get_orders_of_model, name="orders_of_model")
+register.simple_tag(func=get_models_in_order, name="models_in_order")

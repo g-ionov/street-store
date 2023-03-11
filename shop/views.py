@@ -1,16 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
 from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm
-from .models import Model, Review
+from .models import Model, Order
 from .services.brand_services import get_brands
 from .services.cart_services import add_to_cart, remove_from_cart
 from .services.model_services import get_new_models, get_model
-from .services.order_services import get_best_selling_models
+from .services.order_services import get_best_selling_models, get_user_orders
 from .services.review_services import create_or_update_review, delete_review
 from .services.stock_services import get_model_sizes_quantity_in_stock
 from .services.user_services import delete_user, edit_user
@@ -139,3 +140,19 @@ class WishlistView(View):
         else:
             return redirect('login')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class OrdersView(ListView, LoginRequiredMixin):
+    """ Список заказов пользователя """
+
+    model = Order
+    template_name = 'shop/orders.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return get_user_orders(self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orders'] = context['object_list']
+        return context
