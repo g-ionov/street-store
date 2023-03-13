@@ -5,76 +5,92 @@
     <!-- Orders-Page -->
     <div class="page-wishlist u-s-p-t-80">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- Products-List-Wrapper -->
-                    <div class="table-wrapper u-s-m-b-60">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Номер заказа</th>
-                                <th>Товары</th>
-                                <th>Адрес</th>
-                                <th>Получатель</th>
-                                <th>Создан</th>
-                                <th>Оплачен</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if orders %}
-                                {% for order in orders %}
-                                    <tr>
-                                    <td>
-                                        <p class="order-number">{{ order.id }}</p>
-                                    </td>
-                                    <td>
-                                        {% models_in_order order as models %}
-                                        {% for model in models %}
-                                            <div class="border-bottom">
-                                                <a>{{ model.model.name }}</a>
-                                                <p>{{ model.size.us }} US - {{ model.quantity }} шт.</p>
-                                            </div>
-
-                                        {% endfor %}
-
-                                    </td>
-                                    <td>
-                                        <p class="order-address">{{ order.address }}</p>
-                                    </td>
-                                    {% if order.is_user_recipient %}
-                                        <td>
-                                            <p class="order-recipient">Я</p>
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            <p class="order-recipient">{{ order.recipient }}</p>
-                                        </td>
-                                    {% endif %}
-                                    <td>
-                                        <p class="order-date">{{ order.created_at|date:"d.m.Y" }}</p>
-                                    </td>
-                                    <td>
-                                        {% if order.paid %}
-                                            <i class="fas fa-check"></i>
-                                        {% else %}
-                                            <i class="fas fa-times"></i>
-                                        {% endif %}
-                                    </td>
-                                {% endfor %}
-                            {% else %}
+            <div class="col-lg-12">
+                <!-- Products-List-Wrapper -->
+                <div class="table-wrapper u-s-m-b-60">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Номер заказа</th>
+                            <th>Товары</th>
+                            <th>Адрес</th>
+                            <th>Получатель</th>
+                            <th>Создан</th>
+                            <th>Оплачен</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if orders %}
+                            {% for order in orders %}
                                 <tr>
-                                    <td colspan="4">
-                                        <h4 class="text-center">Ваш список желаний пуст</h4>
+                                <td>
+                                    <p class="order-number">{{ order.id }}</p>
+                                </td>
+                                <td>
+                                    {% models_in_order order as models %}
+                                    {% for model in models %}
+                                        <div class="border-bottom">
+                                            <a>{{ model.model.name }}</a>
+                                            <p>{{ model.size.us }} US - {{ model.quantity }} шт.</p>
+                                        </div>
+
+                                    {% endfor %}
+
+                                </td>
+                                <td>
+                                    <p class="order-address">{{ order.address }}</p>
+                                </td>
+                                {% if order.is_user_recipient %}
+                                    <td>
+                                        <p class="order-recipient">Я</p>
                                     </td>
-                                </tr>
-                            {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Products-List-Wrapper /- -->
+                                {% else %}
+                                    <td>
+                                        <p class="order-recipient">{{ order.recipient }}</p>
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    <p class="order-date">{{ order.created_at|date:"d.m.Y" }}</p>
+                                </td>
+                                <td>
+                                    {% if order.paid %}
+                                        <i class="fas fa-check"></i>
+                                    {% else %}
+                                        <i class="fas fa-times"></i>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4">
+                                    <h4 class="text-center">Ваш список желаний пуст</h4>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
                 </div>
+                <!-- Products-List-Wrapper /- -->
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1"> 1</a>
+                        <a href="?page={{ page_obj.previous_page_number }}"><-</a>
+                    {% endif %}
+
+                    <span class="current">
+                        {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">-></a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                    {% endif %}
+                </span>
             </div>
         </div>
+
     </div>
     <!-- Orders-Page /- -->
 {% endblock content %}
