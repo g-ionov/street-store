@@ -32,3 +32,8 @@ def add_to_cart(user, model, size, quantity):
 def remove_from_cart(user, model):
     """ Удаление товара из корзины """
     models.Cart.objects.filter(user=user, model=model).delete()
+
+
+def clear_cart(user):
+    """ Очистка корзины """
+    models.Cart.objects.filter(user=user).delete()

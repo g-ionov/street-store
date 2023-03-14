@@ -2,16 +2,17 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView, ListView
+from django.urls import reverse
+from django.views.generic import DetailView, ListView, CreateView
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
-from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm
+from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm, CheckoutForm
 from .models import Model, Order
 from .services.brand_services import get_brands
 from .services.cart_services import add_to_cart, remove_from_cart
 from .services.model_services import get_new_models, get_model
-from .services.order_services import get_best_selling_models, get_user_orders
+from .services.order_services import get_best_selling_models, get_user_orders, create_order
 from .services.review_services import create_or_update_review, delete_review
 from .services.stock_services import get_model_sizes_quantity_in_stock
 from .services.user_services import delete_user, edit_user
@@ -142,7 +143,7 @@ class WishlistView(View):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-class OrdersView(ListView, LoginRequiredMixin):
+class OrderListView(ListView, LoginRequiredMixin):
     """ Список заказов пользователя """
 
     model = Order
@@ -156,3 +157,18 @@ class OrdersView(ListView, LoginRequiredMixin):
         context = super().get_context_data(**kwargs)
         context['orders'] = context['object_list']
         return context
+
+
+class OrderCreateView(View, LoginRequiredMixin):
+    """ Создание заказа """
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'shop/checkout.html', {})
+
+    def post(self, request, *args, **kwargs):
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            form.cleaned_data['user'] = request.user
+            create_order(**form.cleaned_data)
+            return redirect('orders')
+        return render(request, 'shop/checkout.html', {'form_errors': form.errors})

@@ -1,0 +1,150 @@
+{% extends 'shop/base.html' %}
+{% block title %} Оформить заказ {% endblock title %}
+{% load extra_tags %}
+{% block content %}
+    <!-- Checkout-Page -->
+    <div class="page-checkout u-s-p-t-80">
+        <div class="container">
+            {% if form_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors }}
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <!-- Recipient -->
+                    <form action="{% url 'checkout' %}" class="post-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="user" value="{{ user }}">
+                        <div>
+                            <div class="message-open u-s-m-b-24">
+                                Вы не являетесь получателем?
+                                <strong>
+                                    <a class="u-c-brand" data-toggle="collapse" href="#showrecipient">Нажмите здесь,
+                                        чтобы
+                                        заполнить информацию о получателе
+                                    </a>
+                                </strong>
+                            </div>
+                            <div class="collapse u-s-m-b-24" id="showrecipient">
+                                <div class="group-inline">
+                                    <div class="group-1 col-4">
+                                        <label for="user-name">Имя
+                                            <span class="astk">*</span>
+                                        </label>
+                                        <input type="text" id="user-name" class="text-field"
+                                               placeholder="Имя" name="first_name">
+                                    </div>
+                                    <div class="group-1 col-4">
+                                        <label for="user-last-name">Фамилия
+                                            <span class="astk">*</span>
+                                        </label>
+                                        <input type="text" id="user-last-name" class="text-field"
+                                               placeholder="Фамилия" name="last_name">
+                                    </div>
+                                    <div class="group-2 col-4">
+                                        <label for="user-phone">Номер-телефона
+                                            <span class="astk">*</span>
+                                        </label>
+                                        <input type="text" id="user-phone" class="text-field"
+                                               placeholder="Номер телефона" name="phone">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recipient /- -->
+
+                        <div class="row">
+                            <!-- Billing-&-Shipping-Details -->
+                            <div class="col-lg-6">
+                                <h4 class="section-h4">Детали заказа</h4>
+                                <div class="u-s-m-b-13">
+                                    <label for="city-input">Город
+                                        <span class="astk">*</span>
+                                    </label>
+                                    <input type="text" id="city-input" name="city" class="text-field"
+                                           placeholder="Город">
+                                </div>
+                                <div class="u-s-m-b-13">
+                                    <label for="street-input">Улица
+                                        <span class="astk">*</span>
+                                    </label>
+                                    <input type="text" id="street-input" name="street" class="text-field"
+                                           placeholder="Улица">
+                                </div>
+                                <div class="u-s-m-b-13">
+                                    <label for="house-input">Дом
+                                        <span class="astk">*</span>
+                                    </label>
+                                    <input type="text" id="house-input" name="number" class="text-field"
+                                           placeholder="Дом">
+                                </div>
+                                <div class="u-s-m-b-13">
+                                    <label for="block-input">Корпус
+                                    </label>
+                                    <input type="text" id="block-input" name="block" class="text-field"
+                                           placeholder="Корпус">
+                                </div>
+                                <div class="u-s-m-b-13">
+                                    <label for="apartment-input">Квартира
+                                    </label>
+                                    <input type="text" id="apartment-input" name="apartment" class="text-field"
+                                           placeholder="Квартира">
+                                </div>
+                                <label for="postcode">Индекс
+                                    <span class="astk">*</span>
+                                </label>
+                                <input type="text" id="postcode" class="text-field" name="zip_code">
+                            </div>
+                            <!-- Billing-&-Shipping-Details /- -->
+                            <!-- Checkout -->
+                            <div class="col-lg-6">
+                                <h4 class="section-h4">Заказ</h4>
+                                <div class="order-table">
+                                    <table class="u-s-m-b-13">
+                                        <thead>
+                                        <tr>
+                                            <th>Товар</th>
+                                            <th>Стоимость</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            {% models_in_cart user as products %}
+                                            {% for product in products %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="cart-anchor-image">
+                                                            <a href="{{ product.model.get_absolute_url }}">
+                                                                <img src="{% main_model_image product.model %}"
+                                                                     alt="{{ product.model.name }}">
+                                                                <h6>{{ product.model.name }}</h6>
+                                                            </a>
+                                                            <h6>{{ product.size }}</h6>
+                                                            <h6>{{ product.quantity }} шт.</h6>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="cart-price">
+                                                            {{ product.model.get_current_price }}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        <td>
+                                            <h4>{% total_price_in_cart user %} р.</h4>
+                                        </td>
+                                        </tbody>
+                                    </table>
+                                    <button type="submit" class="button button-outline-secondary">Заказать</button>
+                                </div>
+                            </div>
+                            <!-- Checkout /- -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout-Page /- -->
+{% endblock content %}

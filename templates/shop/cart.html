@@ -96,13 +96,13 @@
                                 <h6>Если у Вас есть купон, укажите его.</h6>
                                 <div class="coupon-field">
                                     <label class="sr-only" for="coupon-code">Применить купон</label>
-                                    <input id="coupon-code" type="text" class="text-field" placeholder="Coupon Code">
-                                    <button type="submit" class="button">Применить купон<</button>
+                                    <input id="coupon-code" type="text" class="text-field" placeholder="Купон">
+                                    <button type="submit" class="button">Применить купон</button>
                                 </div>
                             </div>
                             <div class="button-area">
                                 <a href="{% url 'index' %}" class="continue">Продолжить покупки</a>
-                                <a href="#" class="checkout">Оформить заказ</a>
+                                <a href="{% url 'checkout' %}" class="checkout">Оформить заказ</a>
                             </div>
                         </div>
                         <!-- Coupon /- -->
