@@ -10,9 +10,10 @@ def get_models_in_cart(user):
 
 def get_total_price_in_cart(user):
     """ Получение общей стоимости товаров в корзине пользователя """
-    query = models.Cart.objects.filter(user=user).aggregate(
-        total_price=Sum(F('model__price') * F('quantity'))).get('total_price')
-    return query if query else 0
+    total_sum = 0
+    for model in models.Cart.objects.filter(user=user).annotate(Sum('quantity')):
+        total_sum += model.model.get_current_price() * model.quantity
+    return total_sum
 
 
 def get_total_quantity_in_cart(user):

@@ -16,7 +16,7 @@
                     <a href="{{ item.model.get_absolute_url }}">
                         <img src="{% main_model_image item.model %}" alt="Product"/>
                         <span class="mini-item-name">{{ item.model.name }}</span>
-                        <span class="mini-item-price">{{ item.model.price }} р</span>
+                        <span class="mini-item-price">{{ item.model.get_current_price }} р</span>
                         <span class="mini-item-quantity"> {{ item.quantity }} </span>
                     </a>
                 </li>

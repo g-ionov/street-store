@@ -2,13 +2,14 @@ from django.db.models import Count
 
 from shop import models
 from shop.services.address_services import get_address_if_exist_or_create
-from shop.services.cart_services import clear_cart, get_models_in_cart
+from shop.services.cart_services import clear_cart, get_models_in_cart, get_total_price_in_cart
+from shop.services.coupon_services import get_total_price_in_cart_with_coupon, check_using_possibility
 from shop.services.user_services import get_recipient_if_exist_or_create
 
 
 def get_orders_of_model(user, model):
     """ Получение заказов, содержащих товар """
-    return models.Order.objects.filter(user=user, modelorder__model=model)
+    return models.Order.objects.filter(user=user, modelorder__model=model).distinct()
 
 
 def get_model_sells(model):
@@ -43,10 +44,15 @@ def create_order(**kwargs):
         if all(map(lambda x: kwargs.get(x) != '', ('first_name', 'last_name', 'phone'))) else None
 
     is_user_recipient = False if recipient else True
-    for key in ('user', 'first_name', 'last_name', 'phone'): kwargs.pop(key)
+
+    price = get_total_price_in_cart_with_coupon(user, kwargs.get('coupon')) \
+        if kwargs.get('coupon') != '' and check_using_possibility(kwargs.get('coupon'), user) \
+        else get_total_price_in_cart(user)
+
+    for key in ('user', 'first_name', 'last_name', 'phone', 'coupon'): kwargs.pop(key)
     address = get_address_if_exist_or_create(**kwargs)
     order = models.Order.objects.create \
-        (user=user, recipient=recipient, address=address, is_user_recipient=is_user_recipient)
+        (user=user, recipient=recipient, address=address, is_user_recipient=is_user_recipient, price=price)
     for model in get_models_in_cart(user):
         models.ModelOrder.objects.create(order=order, model=model.model, size=model.size, quantity=model.quantity)
     clear_cart(user)

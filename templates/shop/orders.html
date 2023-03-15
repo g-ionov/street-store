@@ -17,6 +17,7 @@
                             <th>Получатель</th>
                             <th>Создан</th>
                             <th>Оплачен</th>
+                            <th>Сумма</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -30,7 +31,7 @@
                                     {% models_in_order order as models %}
                                     {% for model in models %}
                                         <div class="border-bottom">
-                                            <a>{{ model.model.name }}</a>
+                                            <a href="{{ model.model.get_absolute_url }}">{{ model.model.name }}</a>
                                             <p>{{ model.size.us }} US - {{ model.quantity }} шт.</p>
                                         </div>
 
@@ -58,6 +59,9 @@
                                     {% else %}
                                         <i class="fas fa-times"></i>
                                     {% endif %}
+                                </td>
+                                <td>
+                                    <p class="order-price">{{ order.price|floatformat:2 }}₽</p>
                                 </td>
                             {% endfor %}
                         {% else %}

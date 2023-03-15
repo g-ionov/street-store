@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from phonenumber_field.formfields import PhoneNumberField
 
-from .models import Review, User, Cart, Order
+from .models import Review, User, Cart, Order, Coupon
 
 
 class ReviewForm(forms.ModelForm):
@@ -34,6 +34,7 @@ class UserEditForm(forms.Form):
 
 class AddToCartForm(forms.ModelForm):
     """ Форма добавления товара в корзину """
+    quantity = forms.IntegerField(required=False)
 
     class Meta:
         model = Cart
@@ -51,3 +52,9 @@ class CheckoutForm(forms.Form):
     block = forms.CharField(max_length=3, required=False, label='Корпус')
     apartment = forms.CharField(max_length=6, required=False, label='Квартира')
     zip_code = forms.CharField(max_length=6, label='Индекс')
+    coupon = forms.CharField(max_length=50, required=False, label='Купон')
+
+
+class CouponForm(forms.Form):
+    """ Форма для ввода купона"""
+    code = forms.CharField(max_length=50)

@@ -26,7 +26,7 @@ def create_or_update_review(user, model, order, grade, text):
     if is_review_exists(order, user, model):
         models.Review.objects.filter(order=order, user=user, model=model).update(grade=grade, text=text)
     else:
-        models.Review.objects.create(user=user, model=model, order=order, grade=grade, text=text)
+        models.Review.objects.create(user=user, model_id=model, order_id=order, grade=grade, text=text)
 
 
 def delete_review(review_id):

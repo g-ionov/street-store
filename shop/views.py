@@ -2,15 +2,15 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
-from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm, CheckoutForm
+from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm, CheckoutForm, CouponForm
 from .models import Model, Order
 from .services.brand_services import get_brands
 from .services.cart_services import add_to_cart, remove_from_cart
+from .services.coupon_services import get_total_price_in_cart_with_coupon
 from .services.model_services import get_new_models, get_model
 from .services.order_services import get_best_selling_models, get_user_orders, create_order
 from .services.review_services import create_or_update_review, delete_review
@@ -103,22 +103,32 @@ class CartView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'shop/cart.html', {})
 
-    def post(self, request, pk, *args, **kwargs):
+    def post(self, request, pk=None, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('login')
+
         if request.POST['action'] == 'add':
             form = AddToCartForm(request.POST)
             if form.is_valid():
+                print(form.cleaned_data)
                 if not form.cleaned_data['quantity']:
-                    form.quantity = 1
+                    form.cleaned_data['quantity'] = 1
                 if get_model_sizes_quantity_in_stock(pk, form.cleaned_data['size']) < \
                         form.cleaned_data['quantity']:
                     messages.error(request, 'Недостаточно товара на складе')
                 else:
                     add_to_cart(request.user, pk, form.cleaned_data['size'], form.cleaned_data['quantity'])
                     messages.success(request, 'Товар успешно добавлен в корзину')
+
         elif request.POST['action'] == 'remove':
             remove_from_cart(request.user, pk)
+
+        elif request.POST['action'] == 'check_coupon':
+            form = CouponForm(request.POST)
+            if form.is_valid():
+                return render(request, 'shop/cart.html',
+                              {'price_with_coupon': get_total_price_in_cart_with_coupon(request.user,
+                                                                                        form.cleaned_data['code'])})
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

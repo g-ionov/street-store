@@ -30,6 +30,7 @@
                                                              alt="{{ product.model.name }}">
                                                         <h6>{{ product.model.name }}</h6>
                                                     </a>
+                                                    <h6>{{ product.size.us }} US</h6>
                                                 </div>
                                             </td>
                                             <td>
@@ -83,7 +84,12 @@
                                         <h3>Итоговая стоимость</h3>
                                     </td>
                                     <td>
-                                        <h3 class="text-right">{% total_price_in_cart user %} р.</h3>
+                                        {% if price_with_coupon %}
+                                            <h3 class="text-right">{{ price_with_coupon }} р.</h3>
+                                        {% else %}
+                                            <h3 class="text-right">{% total_price_in_cart user %} ₽</h3>
+                                        {% endif %}
+
                                     </td>
                                 </tr>
                                 </tbody>
@@ -95,9 +101,14 @@
                             <div class="coupon-area">
                                 <h6>Если у Вас есть купон, укажите его.</h6>
                                 <div class="coupon-field">
-                                    <label class="sr-only" for="coupon-code">Применить купон</label>
-                                    <input id="coupon-code" type="text" class="text-field" placeholder="Купон">
-                                    <button type="submit" class="button">Применить купон</button>
+                                    <form class="post-form" method="post" action="{% url 'cart' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="check_coupon">
+                                        <label class="sr-only" for="coupon-code">Проверить купон</label>
+                                        <input id="coupon-code" type="text" class="text-field" placeholder="Купон"
+                                               name="code">
+                                        <button type="submit" class="button">Проверить купон</button>
+                                    </form>
                                 </div>
                             </div>
                             <div class="button-area">
@@ -107,24 +118,6 @@
                         </div>
                         <!-- Coupon /- -->
                     </form>
-
-                    <div class="calculation u-s-m-b-60">
-                        <div class="table-wrapper-2">
-                            <table>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <h3 class="calc-h3 u-s-m-b-0">Итоговая стоимость</h3>
-                                    </td>
-                                    <td>
-                                        <span class="calc-text">{% total_price_in_cart user %} р.</span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

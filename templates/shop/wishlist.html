@@ -15,7 +15,6 @@
                                 <th>Товар</th>
                                 <th>Стоимость</th>
                                 <th>Наличие на складе</th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -50,9 +49,26 @@
                                         <td>
                                             <div class="action-wrapper">
                                                 {% if product_quantity > 0 %}
-                                                    <form action="{% url 'add_to_cart' %}"
+                                                    <form action="{% url 'add_or_remove_from_cart' product.model.pk %}"
                                                           method="post">
                                                         {% csrf_token %}
+                                                        <input type="hidden" name="action" value="add">
+                                                        <div class="sizes u-s-m-b-11">
+                                                            <div class="size-variant select-box-wrapper">
+                                                                <h6>Размер</h6>
+                                                                <label>
+                                                                    <select class="select-box product-size" name="size">
+                                                                        {% model_sizes product.model as sizes %}
+                                                                        {% for size in sizes %}
+                                                                            <option value="{{ size.0.pk }}">{{ size.0.us }}
+                                                                                US
+                                                                                - {{ size.1 }} шт
+                                                                            </option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                         <button class="button button-outline-secondary">Добавить в
                                                             корзину
                                                         </button>
