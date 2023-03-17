@@ -35,6 +35,7 @@ def check_using_possibility(code, user=None):
             return False
         if get_coupon_uses_by_user(coupon, user) >= coupon.max_uses.uses_per_user:
             return False
+    return True
 
 
 def get_total_price_in_cart_with_coupon(user, code):
