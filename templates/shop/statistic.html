@@ -1,0 +1,49 @@
+{% extends 'shop/base.html' %}
+{% load extra_tags %}
+{% block title %} Заказы {% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Статистика</h1>
+        {% if form_errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ form_errors }}
+            </div>
+        {% endif %}
+        <form method="post" action="{% url 'statistic' %}">
+            {% csrf_token %}
+            <label for="start-date">C</label>
+            <input type="date" id="start-date" name="start-date">
+            <label for="end-date">По</label>
+            <input type="date" id="end-date" name="end-date">
+            <label for="all-time">За все время</label>
+            <input type="checkbox" id="all-time" name="all_time">
+            <button type="submit" class="btn btn-primary">Показать</button>
+        </form>
+        <table>
+            <thead>
+            <tr>
+                <th>Показатель</th>
+                <th>Значение</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Количество заказов</td>
+                <td>{{ statistic.total_orders_quantity }}</td>
+            </tr>
+            <tr>
+                <td>Сумма заказов</td>
+                <td>{{ statistic.total_orders_sum }}</td>
+            </tr>
+            <tr>
+                <td>Средний чек</td>
+                <td>{{ statistic.average_order_sum }}</td>
+            </tr>
+            <tr>
+                <td>Количество новых клиентов</td>
+                <td>{{ statistic.total_users_quantity }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

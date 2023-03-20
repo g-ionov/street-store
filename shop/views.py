@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +8,8 @@ from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 
-from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm, CheckoutForm, CouponForm
+from .forms import ReviewForm, CustomUserCreationForm, AddToCartForm, UserEditForm, CheckoutForm, CouponForm, \
+    DatePeriodForm
 from .models import Model, Order
 from .services.brand_services import get_brands
 from .services.cart_services import add_to_cart, remove_from_cart
@@ -14,6 +17,7 @@ from .services.coupon_services import get_total_price_in_cart_with_coupon
 from .services.model_services import get_new_models, get_model
 from .services.order_services import get_best_selling_models, get_user_orders, create_order
 from .services.review_services import create_or_update_review, delete_review
+from .services.statistic_services import check_period, get_statistic, check_permission_for_statistic
 from .services.stock_services import get_model_sizes_quantity_in_stock
 from .services.user_services import delete_user, edit_user
 from .services.wishlist_services import is_model_in_wishlist, remove_from_wishlist, add_to_wishlist
@@ -182,3 +186,25 @@ class OrderCreateView(View, LoginRequiredMixin):
             create_order(**form.cleaned_data)
             return redirect('orders')
         return render(request, 'shop/checkout.html', {'form_errors': form.errors})
+
+
+class StatisticView(View):
+    """ Статистика """
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'shop/statistic.html', {}) if check_permission_for_statistic(request.user) else \
+            render(request, 'shop/404.html', {})
+
+    def post(self, request, *args, **kwargs):
+        form = DatePeriodForm(request.POST)
+        if check_permission_for_statistic(request.user):
+            if form.is_valid():
+                if form.cleaned_data['all_time']:
+                    return render(request, 'shop/statistic.html', {'statistic': get_statistic()})
+                elif form.cleaned_data['start_date'] and form.cleaned_data['end_date']:
+                    if check_period(form.cleaned_data['start_date'], form.cleaned_data['end_date']):
+                        return render(request, 'shop/statistic.html', {
+                            'statistic': get_statistic(form.cleaned_data['start_date'], form.cleaned_data['end_date'])})
+                return render(request, 'shop/statistic.html', {'form_error': 'Указан неверный период'})
+            return render(request, 'shop/statistic.html', {'form_errors': form.errors})
+        return render(request, 'shop/404.html', {})

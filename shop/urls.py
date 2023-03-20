@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import ModelDetailView, AddReview, MainView, \
-    RegisterUserView, CartView, WishlistView, UserView, OrderListView, OrderCreateView
+    RegisterUserView, CartView, WishlistView, UserView, OrderListView, OrderCreateView, StatisticView
 
 urlpatterns = [
     path('', MainView.as_view(), name='index'),
@@ -13,6 +13,7 @@ urlpatterns = [
     path("cart/", CartView.as_view(), name="cart"),
     path("cart/<int:pk>", CartView.as_view(), name="add_or_remove_from_cart"),
     path("check_coupon/", CartView.as_view(), name="check_coupon"),
+    path("statistic/", StatisticView.as_view(), name="statistic"),
     path("model/<slug:slug>/", ModelDetailView.as_view(), name="model_detail"),
     path("review/<str:action>", AddReview.as_view(), name="review"),
     path("register/", RegisterUserView.as_view(), name="register_user"),

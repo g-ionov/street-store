@@ -58,3 +58,10 @@ class CheckoutForm(forms.Form):
 class CouponForm(forms.Form):
     """ Форма для ввода купона"""
     code = forms.CharField(max_length=50)
+
+
+class DatePeriodForm(forms.Form):
+    """ Форма для ввода периода дат"""
+    start_date = forms.DateField(required=False)
+    end_date = forms.DateField(required=False)
+    all_time = forms.BooleanField(required=False)
