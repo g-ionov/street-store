@@ -67,6 +67,7 @@ class Order(models.Model):
                                   null=True)
     paid = models.BooleanField(verbose_name='Оплачен', default=False)
     price = models.DecimalField(verbose_name='Стоимость', max_digits=8, decimal_places=2)
+    coupon = models.ForeignKey(to="Coupon", on_delete=models.SET_NULL, related_name='Coupon', blank=True, null=True)
 
     def __str__(self):
         return f'Заказ {self.pk} пользователя {self.user}'
@@ -291,20 +292,6 @@ class Coupon(models.Model):
         verbose_name = 'Купон'
         verbose_name_plural = 'Купоны'
         ordering = ['-discount']
-
-
-class CouponUses(models.Model):
-    """ Использование купона """
-    user = models.ForeignKey(User, models.CASCADE, verbose_name='Пользователь')
-    coupon = models.ForeignKey(Coupon, models.CASCADE, verbose_name='Купон')
-    order = models.ForeignKey(Order, models.CASCADE, verbose_name='Заказ')
-
-    def __str__(self):
-        return f'{self.user} - {self.coupon}'
-
-    class Meta:
-        verbose_name = 'Использование купона'
-        verbose_name_plural = 'Использование купонов'
 
 
 class ModelImages(models.Model):

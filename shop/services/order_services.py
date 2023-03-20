@@ -45,14 +45,18 @@ def create_order(**kwargs):
 
     is_user_recipient = False if recipient else True
 
-    price = get_total_price_in_cart_with_coupon(user, kwargs.get('coupon')) \
-        if kwargs.get('coupon') != '' and check_using_possibility(kwargs.get('coupon'), user) \
-        else get_total_price_in_cart(user)
+    if kwargs.get('coupon') != '' and check_using_possibility(kwargs.get('coupon'), user):
+        coupon = kwargs.get('coupon')
+        price = get_total_price_in_cart_with_coupon(user, kwargs.get('coupon'))
+    else:
+        price = get_total_price_in_cart(user)
+        coupon = None
 
     for key in ('user', 'first_name', 'last_name', 'phone', 'coupon'): kwargs.pop(key)
     address = get_address_if_exist_or_create(**kwargs)
     order = models.Order.objects.create \
-        (user=user, recipient=recipient, address=address, is_user_recipient=is_user_recipient, price=price)
+        (user=user, recipient=recipient, address=address, is_user_recipient=is_user_recipient, price=price,
+         coupon=coupon)
     for model in get_models_in_cart(user):
         models.ModelOrder.objects.create(order=order, model=model.model, size=model.size, quantity=model.quantity)
     clear_cart(user)

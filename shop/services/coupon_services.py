@@ -11,7 +11,7 @@ def get_coupon_users(coupon):
 
 def get_coupon_uses_by_user(coupon, user):
     """ Получение количества использований купона пользователем """
-    return models.CouponUses.objects.filter(coupon=coupon, user=user).count()
+    return models.Order.objects.filter(coupon=coupon, user=user).count()
 
 
 def check_using_possibility(code, user=None):
